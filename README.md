@@ -16,10 +16,10 @@ React library to help to build form easier than before
 yarn install
 ```
 
-## Development
+## Storybook
 
 ```shellscript
-yarn start
+yarn storybook
 ```
 
 ## Test
