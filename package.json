@@ -7,13 +7,19 @@
     "test": "jest --passWithNoTests",
     "test:watch": "jest --passWithNoTests --watch -o",
     "lint": "eslint -c .eslintrc.js --fix --ext .tsx,.ts,.js",
-    "analyze": "webpack --env.NODE_ENV=production --env.ANALYZE=*"
+    "analyze": "webpack --env.NODE_ENV=production --env.ANALYZE=*",
+    "storybook": "start-storybook -p 6006",
+    "build-storybook": "build-storybook"
   },
   "devDependencies": {
     "@babel/core": "^7.11.0",
     "@babel/preset-env": "^7.11.0",
     "@babel/preset-react": "^7.10.4",
     "@babel/preset-typescript": "^7.10.4",
+    "@storybook/addon-actions": "^6.0.22",
+    "@storybook/addon-essentials": "^6.0.22",
+    "@storybook/addon-links": "^6.0.22",
+    "@storybook/react": "^6.0.22",
     "@types/jest": "^26.0.7",
     "@types/react": "^16.9.43",
     "@typescript-eslint/eslint-plugin": "^4.3.0",
@@ -34,6 +40,7 @@
     "lint-staged": "^10.2.11",
     "prettier": "^2.0.5",
     "react": "^16.13.1",
+    "react-is": "^16.13.1",
     "source-map-loader": "^1.0.1",
     "ts-jest": "^26.1.4",
     "tsconfig-paths-webpack-plugin": "^3.3.0",
@@ -55,5 +62,6 @@
       "yarn lint",
       "yarn test"
     ]
-  }
+  },
+  "dependencies": {}
 }

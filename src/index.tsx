@@ -1,7 +1,11 @@
 import React from "react";
 
-const Main: React.FC = () => {
-  return <div>Main Component</div>;
+export interface MainProps {
+  name: string;
+}
+
+const Main: React.FC<MainProps> = ({ name }) => {
+  return <div>Hello, {name}</div>;
 };
 
 export default Main;
