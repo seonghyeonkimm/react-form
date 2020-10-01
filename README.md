@@ -1,6 +1,6 @@
 # react-form
 
-React library to help building form easier than before
+React library to help to build form easier than before
 
 ## Requirement
 

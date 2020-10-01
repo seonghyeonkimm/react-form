@@ -3,3 +3,7 @@ node_modules
 
 # build
 dist
+
+# storybook
+storybook-static
+build-storybook.log
