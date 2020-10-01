@@ -11,8 +11,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v1
-      - run: npm i -g yarn
-      - run: yarn build-storybook 
+      - uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: install
+      - uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: build-storybook
       - uses: chromaui/action@v1
         with: 
           projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
