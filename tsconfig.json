@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ESNEXT",
-    "module": "ESNext",
+    "lib": ["ES2019"],
+    "target": "ES2019",
+    "module": "commonjs",
     "jsx": "react",
     "sourceMap": true,
     "strict": true,
@@ -9,6 +10,9 @@
     "baseUrl": "src",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "paths": {
+      "~components/*": ["components/*"]
+    }
   }
 }
