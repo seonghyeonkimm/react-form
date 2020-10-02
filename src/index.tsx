@@ -5,7 +5,7 @@ export interface MainProps {
 }
 
 const Main: React.FC<MainProps> = ({ name }) => {
-  return <div>My name is {name}</div>;
+  return <div>Hello world, this is {name}</div>;
 };
 
 export default Main;
