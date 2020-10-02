@@ -1,0 +1,34 @@
+name: 'production'
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'src/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - name: Install dependencies
+      - uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: install
+      - name: Run lint
+        uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: lint
+      - name: Run test
+        uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: test
+      - name: Upload coverage
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
+      - name: Run build
+        uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: build

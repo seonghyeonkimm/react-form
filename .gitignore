@@ -7,3 +7,6 @@ dist
 # storybook
 storybook-static
 build-storybook.log
+
+# coverage
+coverage

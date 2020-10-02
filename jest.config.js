@@ -9,4 +9,5 @@ module.exports = {
     compilerOptions.paths,
     { prefix: `<rootDir>/${compilerOptions.baseUrl}/` },
   ),
+  collectCoverage: true,
 };
