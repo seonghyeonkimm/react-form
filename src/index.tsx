@@ -1,11 +1,9 @@
-import React from "react";
+// components
+export { default as FormConfigProvider } from "./FormConfigProvider";
+export { default as Form } from "./Form";
+export { default as FormItem } from "./FormItem";
 
-export interface MainProps {
-  name: string;
-}
-
-const Main: React.FC<MainProps> = ({ name }) => {
-  return <div>Hello world, this is {name}</div>;
-};
-
-export default Main;
+// hooks
+export { default as useForm } from "./useForm";
+export { default as useFormConfig } from "./useFormConfig";
+export { default as useFormItem } from "./useFormItem";
