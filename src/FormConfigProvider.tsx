@@ -37,7 +37,7 @@ const DEFAULT_VALIDATE_MESSAGE = {
 };
 
 const makeDefaultErrorProps = (errors: string[]) => ({
-  helperText: errors.join("\n"),
+  helperText: errors.join(", "),
   error: errors.length > 0,
 });
 

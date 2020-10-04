@@ -23,39 +23,52 @@ export type ItemRuleType = {
 
 export type ValuePropNameType = "value" | "checked" | "files";
 
-const useFormItem = (
-  name: string | ItemPathType,
-  options?: {
-    rules?: ItemRuleType;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    onChange?: (inputValue: ValueType) => void;
-    validate?: (value: ValueType) => string[];
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    makeErrorProps?: (errors: string[]) => Record<string, any>;
-    validateMode?: ValidateModeType;
-    valuePropName?: ValuePropNameType;
-  }
-) => {
+function useFormItem<TValue extends ValueType>({
+  name,
+  defaultValue,
+  rules,
+  validate,
+  makeErrorProps,
+  validateMode,
+  valuePropName,
+}: {
+  name: string | ItemPathType;
+  defaultValue?: ValueType;
+  rules?: ItemRuleType;
+  validate?: (value: ValueType) => string[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  makeErrorProps?: (errors: string[]) => Record<string, any>;
+  validateMode?: ValidateModeType;
+  valuePropName?: ValuePropNameType;
+}) {
   const mountRef = useRef(false);
   const form = useForm();
-  const { validateMessage, makeErrorProps, validateMode } = useFormConfig();
+  const {
+    validateMessage,
+    makeErrorProps: globalMakeErrorProps,
+    validateMode: globalValidateMode,
+  } = useFormConfig();
   const [errors, setErrors] = useState<string[]>([]);
-  const [value, setValue] = useState<ValueType>(() =>
-    form.getItemInitialValue(name) || options?.valuePropName === "checked"
-      ? false
-      : ""
+  const itemDefaultValue = useMemo(
+    () =>
+      form.getItemInitialValue(name) || typeof defaultValue !== "undefined"
+        ? defaultValue
+        : valuePropName === "checked"
+        ? false
+        : "",
+    [defaultValue, form, name, valuePropName]
   );
+  const [value, setValue] = useState<TValue>(itemDefaultValue as TValue);
   const itemRef = useRef();
   const storeRef = useMemo(() => form.createOrGetItemRef(name), [form, name]);
 
   const handleItemValidate = useCallback(
-    (inputValue: ValueType) => {
-      const { required, maxLength, minLength, max, min, pattern } =
-        options?.rules || {};
+    (inputValue: TValue) => {
+      const { required, maxLength, minLength, max, min, pattern } = rules || {};
 
       // custom validation
-      if (options?.validate) {
-        const nextErrors = options.validate(inputValue);
+      if (validate) {
+        const nextErrors = validate(inputValue);
 
         setErrors(nextErrors);
 
@@ -118,7 +131,8 @@ const useFormItem = (
       return nextErrors.length === 0;
     },
     [
-      options,
+      rules,
+      validate,
       validateMessage.max,
       validateMessage.maxLength,
       validateMessage.min,
@@ -129,36 +143,24 @@ const useFormItem = (
   );
 
   const handleItemBlur = useCallback(() => {
-    const itemValidateMode = options?.validateMode || validateMode;
+    const itemValidateMode = validateMode || globalValidateMode;
     if (itemValidateMode !== "blur") return;
     handleItemValidate(value);
-  }, [handleItemValidate, options?.validateMode, validateMode, value]);
+  }, [globalValidateMode, handleItemValidate, validateMode, value]);
 
   const handleItemChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      const inputValue = e.target[options?.valuePropName || "value"];
+      const itemValidateMode = validateMode || globalValidateMode;
+      const inputValue = e.target[valuePropName || "value"] as TValue;
       if (typeof inputValue === "undefined") return;
 
       setValue(inputValue);
 
-      if (validateMode === "change") {
+      if (itemValidateMode === "change") {
         handleItemValidate(inputValue);
       }
     },
-    [handleItemValidate, options?.valuePropName, validateMode]
-  );
-
-  const handleCustomItemChange = useCallback(
-    (inputValue) => {
-      if (!options?.onChange) return;
-
-      options.onChange(inputValue);
-
-      if (validateMode === "change") {
-        handleItemValidate(inputValue);
-      }
-    },
-    [handleItemValidate, options, validateMode]
+    [globalValidateMode, handleItemValidate, validateMode, valuePropName]
   );
 
   // register FormItem in FormService
@@ -168,7 +170,7 @@ const useFormItem = (
     setValue,
     setErrors,
     validate: handleItemValidate,
-    valuePropName: options?.valuePropName || "value",
+    defaultValue: itemDefaultValue,
     instance: itemRef.current,
   }));
 
@@ -185,15 +187,15 @@ const useFormItem = (
     form,
     value,
     errors,
-    errorProps: options?.makeErrorProps
-      ? options.makeErrorProps(errors)
-      : makeErrorProps(errors),
+    errorProps: makeErrorProps
+      ? makeErrorProps(errors)
+      : globalMakeErrorProps(errors),
     setValue,
     setErrors,
     ref: itemRef,
     onBlur: handleItemBlur,
-    onChange: options?.onChange ? handleCustomItemChange : handleItemChange,
+    onChange: handleItemChange,
   };
-};
+}
 
 export default useFormItem;

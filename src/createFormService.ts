@@ -17,7 +17,7 @@ export type ItemPathType = [string, ...ReactText[]];
 export type StoreValueType = {
   value?: ValueType;
   errors?: string[];
-  valuePropName?: "value" | "checked";
+  defaultValue?: ValueType;
   setValue?: (value: ValueType) => void;
   setErrors?: (errors: string[]) => void;
   validate?: () => boolean;
@@ -129,12 +129,7 @@ class FormService {
     const { store, initialValues } = this;
 
     const itemPath = typeof name === "string" ? [name] : name;
-    const valuePropName = _get(store, [
-      ...itemPath,
-      "current",
-      "valuePropName",
-    ]);
-    const defaultValue = valuePropName === "checked" ? false : "";
+    const defaultValue = _get(store, [...itemPath, "current", "defaultValue"]);
 
     return _get(initialValues, name) || defaultValue;
   };

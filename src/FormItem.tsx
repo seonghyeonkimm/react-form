@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 
 import type { ItemPathType, ValueType } from "./createFormService";
 import useFormItem, { ItemRuleType, ValuePropNameType } from "./useFormItem";
@@ -10,30 +10,23 @@ export interface FormItemProps {
   makeErrorProps?: (errors: string[]) => Record<string, any>;
   rules?: ItemRuleType;
   validate?: (value: ValueType) => string[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  onChange?: (...args: any[]) => void;
 }
 
 const FormItem: React.FC<FormItemProps> = ({
   name,
   rules,
   children,
-  onChange,
   validate,
   valuePropName = "value",
   makeErrorProps,
 }) => {
-  const options = useMemo(
-    () => ({ rules, validate, valuePropName, makeErrorProps, onChange }),
-    [rules, validate, valuePropName, makeErrorProps, onChange]
-  );
   const {
     value,
     errorProps,
     ref,
     onChange: onItemChange,
     onBlur,
-  } = useFormItem(name, options);
+  } = useFormItem({ name, rules, validate, valuePropName, makeErrorProps });
 
   if (React.Children.count(children) > 1) {
     console.warn(
