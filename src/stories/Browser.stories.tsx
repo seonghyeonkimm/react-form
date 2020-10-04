@@ -155,11 +155,7 @@ const Input = React.forwardRef<
         ref,
         ...inputProps,
       })}
-      {error && (
-        <div style={{ color: "red", marginTop: 4, whiteSpace: "pre-wrap" }}>
-          {helperText}
-        </div>
-      )}
+      {error && <div style={{ color: "red", marginTop: 4 }}>{helperText}</div>}
     </label>
   );
 });
@@ -189,11 +185,7 @@ const Select = React.forwardRef<
         <option value="2">Option 2</option>
         <option value="3">Option 3</option>
       </select>
-      {error && (
-        <div style={{ color: "red", marginTop: 4, whiteSpace: "pre-line" }}>
-          {helperText}
-        </div>
-      )}
+      {error && <div style={{ color: "red", marginTop: 4 }}>{helperText}</div>}
     </label>
   );
 });
