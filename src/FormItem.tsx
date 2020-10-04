@@ -1,4 +1,4 @@
-import React from "react";
+import React, { RefObject } from "react";
 
 import type { ItemPathType, ValueType } from "./createFormService";
 import useFormItem, { ItemRuleType, ValuePropNameType } from "./useFormItem";
@@ -10,6 +10,21 @@ export interface FormItemProps {
   makeErrorProps?: (errors: string[]) => Record<string, any>;
   rules?: ItemRuleType;
   validate?: (value: ValueType) => string[];
+  children:
+    | React.ReactNode
+    | ((props: {
+        inputProps: {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          ref: RefObject<any>;
+          onBlur: React.FocusEventHandler;
+          onChange: React.ChangeEventHandler;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          value?: any;
+          checked?: boolean;
+        };
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        errorProps: Record<string, any>;
+      }) => React.ReactNode);
 }
 
 const FormItem: React.FC<FormItemProps> = ({
@@ -19,14 +34,30 @@ const FormItem: React.FC<FormItemProps> = ({
   validate,
   valuePropName = "value",
   makeErrorProps,
-}) => {
-  const {
-    value,
-    errorProps,
-    ref,
-    onChange: onItemChange,
-    onBlur,
-  } = useFormItem({ name, rules, validate, valuePropName, makeErrorProps });
+}: FormItemProps) => {
+  const { value, errorProps, ref, onChange, onBlur } = useFormItem({
+    name,
+    rules,
+    validate,
+    valuePropName,
+    makeErrorProps,
+  });
+
+  if (isFunction(children)) {
+    return (
+      <>
+        {children({
+          errorProps,
+          inputProps: {
+            ref,
+            onBlur,
+            onChange,
+            [valuePropName]: value,
+          },
+        })}
+      </>
+    );
+  }
 
   if (React.Children.count(children) > 1) {
     console.warn(
@@ -41,7 +72,7 @@ const FormItem: React.FC<FormItemProps> = ({
       return React.cloneElement(child, {
         ref,
         onBlur,
-        onChange: onItemChange,
+        onChange,
         [valuePropName]: value,
         ...errorProps,
       });
@@ -52,5 +83,10 @@ const FormItem: React.FC<FormItemProps> = ({
 
   return <>{childrenWithProps}</>;
 };
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type IsFunction<T> = T extends (...args: any[]) => unknown ? T : never;
+const isFunction = <T extends unknown>(value: T): value is IsFunction<T> =>
+  typeof value === "function";
 
 export default FormItem;
