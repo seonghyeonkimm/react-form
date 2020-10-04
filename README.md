@@ -2,7 +2,7 @@
 
 ![Github Actions](https://github.com/seonghyeonkimm/react-form/workflows/chromatic/badge.svg)
 ![Github Actions](https://github.com/seonghyeonkimm/react-form/workflows/production/badge.svg)
-![Codecov](https://img.shields.io/codecov/c/github/seonghyeonkimm/react-form)
+<!-- ![Codecov](https://img.shields.io/codecov/c/github/seonghyeonkimm/react-form) -->
 
 React library to help to build form easier than before
 
