@@ -150,7 +150,7 @@ function useFormItem<TValue extends ValueType>({
   const handleItemChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const itemValidateMode = validateMode || globalValidateMode;
-      const inputValue = e.target[valuePropName || "value"] as TValue;
+      const inputValue = e?.target[valuePropName || "value"] as TValue;
       if (typeof inputValue === "undefined") return;
 
       setValue(inputValue);

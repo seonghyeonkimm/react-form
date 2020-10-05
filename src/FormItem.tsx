@@ -1,10 +1,11 @@
-import React, { RefObject } from "react";
+import React, { Dispatch, RefObject, SetStateAction } from "react";
 
 import type { ItemPathType, ValueType } from "./createFormService";
 import useFormItem, { ItemRuleType, ValuePropNameType } from "./useFormItem";
 
 export interface FormItemProps {
   name: string | ItemPathType;
+  defaultValue?: ValueType;
   valuePropName?: ValuePropNameType;
   makeErrorProps?: (errors: string[]) => Record<string, unknown>;
   rules?: ItemRuleType;
@@ -12,6 +13,10 @@ export interface FormItemProps {
   children:
     | React.ReactNode
     | ((props: {
+        formProps: {
+          setValue: Dispatch<SetStateAction<any>>;
+          setErrors: Dispatch<SetStateAction<string[]>>;
+        };
         inputProps: {
           ref: RefObject<any>;
           onBlur: React.FocusEventHandler;
@@ -28,13 +33,23 @@ const FormItem: React.FC<FormItemProps> = ({
   rules,
   children,
   validate,
-  valuePropName = "value",
   makeErrorProps,
+  defaultValue,
+  valuePropName = "value",
 }: FormItemProps) => {
-  const { value, errorProps, ref, onChange, onBlur } = useFormItem({
+  const {
+    value,
+    errorProps,
+    ref,
+    onChange,
+    onBlur,
+    setValue,
+    setErrors,
+  } = useFormItem({
     name,
     rules,
     validate,
+    defaultValue,
     valuePropName,
     makeErrorProps,
   });
@@ -43,6 +58,10 @@ const FormItem: React.FC<FormItemProps> = ({
     return (
       <>
         {children({
+          formProps: {
+            setValue,
+            setErrors,
+          },
           errorProps,
           inputProps: {
             ref,
