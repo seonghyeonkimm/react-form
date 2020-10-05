@@ -19,7 +19,7 @@ export interface FormItemProps {
           value?: any;
           checked?: boolean;
         };
-        errorProps: Record<string, ValueType>;
+        errorProps: Record<string, any>;
       }) => React.ReactNode);
 }
 
