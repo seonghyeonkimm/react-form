@@ -6,7 +6,7 @@ module.exports = module.exports = api => {
     '@babel/preset-react',
     '@babel/preset-typescript',
   ];
-  const plugins = [];
+  const plugins = ["transform-class-properties"];
 
   return { presets, plugins };
 };
