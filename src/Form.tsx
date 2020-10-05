@@ -4,10 +4,7 @@ import createFormService, { FormServiceProps } from "./createFormService";
 
 export const FormContext = React.createContext<
   ReturnType<typeof createFormService>
->(
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  null as any
-);
+>(null as any);
 
 export interface FormProps extends FormServiceProps {
   children: ReactNode;

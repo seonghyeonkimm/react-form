@@ -36,7 +36,6 @@ function useFormItem<TValue extends ValueType>({
   defaultValue?: ValueType;
   rules?: ItemRuleType;
   validate?: (value: ValueType) => string[];
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   makeErrorProps?: (errors: string[]) => Record<string, any>;
   validateMode?: ValidateModeType;
   valuePropName?: ValuePropNameType;

@@ -6,7 +6,6 @@ import React, { ReactText } from "react";
 export type ValueType =
   | ReactText
   | boolean
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   | Record<string, any>
   | undefined
   | null

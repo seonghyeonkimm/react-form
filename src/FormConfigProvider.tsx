@@ -4,7 +4,6 @@ export type ValidateModeType = "blur" | "change";
 export interface FormConfigProps {
   children: ReactNode;
   validateMode?: ValidateModeType;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   makeErrorProps?: (errors: string[]) => Record<string, any>;
   validateMessage?: {
     required?: string;
@@ -18,13 +17,11 @@ export interface FormConfigProps {
 
 export const FormConfigContext = React.createContext<{
   validateMode: ValidateModeType;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   makeErrorProps: (errors: string[]) => Record<string, any>;
   validateMessage: Exclude<
     Required<FormConfigProps["validateMessage"]>,
     undefined
   >;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 }>(null as any);
 
 const DEFAULT_VALIDATE_MESSAGE = {

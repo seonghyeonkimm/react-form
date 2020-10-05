@@ -6,24 +6,20 @@ import useFormItem, { ItemRuleType, ValuePropNameType } from "./useFormItem";
 export interface FormItemProps {
   name: string | ItemPathType;
   valuePropName?: ValuePropNameType;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  makeErrorProps?: (errors: string[]) => Record<string, any>;
+  makeErrorProps?: (errors: string[]) => Record<string, unknown>;
   rules?: ItemRuleType;
   validate?: (value: ValueType) => string[];
   children:
     | React.ReactNode
     | ((props: {
         inputProps: {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           ref: RefObject<any>;
           onBlur: React.FocusEventHandler;
           onChange: React.ChangeEventHandler;
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           value?: any;
           checked?: boolean;
         };
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        errorProps: Record<string, any>;
+        errorProps: Record<string, ValueType>;
       }) => React.ReactNode);
 }
 
@@ -84,7 +80,6 @@ const FormItem: React.FC<FormItemProps> = ({
   return <>{childrenWithProps}</>;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type IsFunction<T> = T extends (...args: any[]) => unknown ? T : never;
 const isFunction = <T extends unknown>(value: T): value is IsFunction<T> =>
   typeof value === "function";
