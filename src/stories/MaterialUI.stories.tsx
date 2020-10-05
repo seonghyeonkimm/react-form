@@ -31,7 +31,7 @@ export default {
   subcomponents: { Form, FormItem, FormConfigProvider },
 } as Meta;
 
-const Exmaple1Template: Story<FormProps> = (args) => {
+const DefaultTemplate: Story<FormProps> = (args) => {
   const [values, setValues] = useState<Record<string, ValueType>>();
 
   const handleFormSubmit = (storeValues: Record<string, ValueType>) => {
@@ -139,8 +139,13 @@ const Exmaple1Template: Story<FormProps> = (args) => {
               >
                 {({ inputProps, errorProps, formProps }) => {
                   const { setValue, setErrors } = formProps;
-                  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-                  const { value, onChange, ...resetInputProps } = inputProps;
+                  const {
+                    value,
+                    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+                    onChange,
+                    ref,
+                    ...resetInputProps
+                  } = inputProps;
 
                   const handleChange = (date: MaterialUiPickersDate) => {
                     if (!date) {
@@ -153,6 +158,7 @@ const Exmaple1Template: Story<FormProps> = (args) => {
 
                   return (
                     <DatePicker
+                      inputRef={ref}
                       placeholder="Select date"
                       value={value || null}
                       onChange={handleChange}
@@ -171,7 +177,7 @@ const Exmaple1Template: Story<FormProps> = (args) => {
   );
 };
 
-const Exmaple2Template: Story<FormProps> = (args) => {
+const ManyInputsTemplate: Story<FormProps> = (args) => {
   const [values, setValues] = useState<Record<string, ValueType>>();
 
   const handleFormSubmit = (storeValues: Record<string, ValueType>) => {
@@ -200,8 +206,8 @@ const Exmaple2Template: Story<FormProps> = (args) => {
   );
 };
 
-export const Default = Exmaple1Template.bind({});
-export const ManyInputs = Exmaple2Template.bind({});
+export const Default = DefaultTemplate.bind({});
+export const ManyInputs = ManyInputsTemplate.bind({});
 
 const FormButtonGroup: React.FC<{ values: any }> = ({ values }) => {
   return (
