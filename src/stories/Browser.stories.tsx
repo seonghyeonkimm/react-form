@@ -4,8 +4,7 @@ import React, { useState } from "react";
 import type { ValueType } from "../createFormService";
 import Form, { FormProps } from "../Form";
 import FormConfigProvider from "../FormConfigProvider";
-import FormItem, { FormItemProps } from "../FormItem";
-import useFormItem from "../useFormItem";
+import FormItem from "../FormItem";
 
 export default {
   title: "react-form/Browser",
@@ -24,17 +23,30 @@ const Exmaple1Template: Story<FormProps> = (args) => {
     <FormConfigProvider validateMode="change">
       <Form {...args} onSubmit={handleFormSubmit}>
         <div
-          style={{ width: "100%", display: "flex", flexDirection: "column" }}
+          style={{
+            width: "100%",
+            maxWidth: 500,
+            display: "flex",
+            flexDirection: "column",
+          }}
         >
-          <InputFormItem
-            label="Text"
+          <FormItem
             name="text"
             rules={{ required: { value: true }, pattern: { value: /^\w{3}$/ } }}
           >
-            <input />
-          </InputFormItem>
-          <InputFormItem
-            label="Number"
+            {({ inputProps, errorProps }) => {
+              return (
+                <FormControlLabel
+                  label="Text"
+                  error={errorProps.error}
+                  helperText={errorProps.helperText}
+                >
+                  <input {...inputProps} />
+                </FormControlLabel>
+              );
+            }}
+          </FormItem>
+          <FormItem
             name="number"
             rules={{
               required: { value: true },
@@ -42,10 +54,19 @@ const Exmaple1Template: Story<FormProps> = (args) => {
               max: { value: 10 },
             }}
           >
-            <input type="number" />
-          </InputFormItem>
-          <InputFormItem
-            label="Textare"
+            {({ inputProps, errorProps }) => {
+              return (
+                <FormControlLabel
+                  label="Number"
+                  error={errorProps.error}
+                  helperText={errorProps.helperText}
+                >
+                  <input {...inputProps} type="number" />
+                </FormControlLabel>
+              );
+            }}
+          </FormItem>
+          <FormItem
             name="textarea"
             rules={{
               required: { value: true },
@@ -53,71 +74,85 @@ const Exmaple1Template: Story<FormProps> = (args) => {
               maxLength: { value: 5 },
             }}
           >
-            <textarea />
-          </InputFormItem>
-          <InputFormItem
-            label="Checkbox"
+            {({ inputProps, errorProps }) => {
+              return (
+                <FormControlLabel
+                  label="Textarea"
+                  error={errorProps.error}
+                  helperText={errorProps.helperText}
+                >
+                  <textarea {...inputProps} />
+                </FormControlLabel>
+              );
+            }}
+          </FormItem>
+          <FormItem
             name="checkbox"
             valuePropName="checked"
             rules={{ required: { value: true } }}
           >
-            <input type="checkbox" />
-          </InputFormItem>
-          <InputFormItem
-            label="Date"
-            name="date"
-            rules={{ required: { value: true } }}
-          >
-            <input type="date" />
-          </InputFormItem>
-          <InputFormItem
-            label="File"
+            {({ inputProps, errorProps }) => {
+              return (
+                <FormControlLabel
+                  label="Checkbox"
+                  error={errorProps.error}
+                  helperText={errorProps.helperText}
+                >
+                  <input {...inputProps} type="checkbox" />
+                </FormControlLabel>
+              );
+            }}
+          </FormItem>
+          <FormItem name="date" rules={{ required: { value: true } }}>
+            {({ inputProps, errorProps }) => {
+              return (
+                <FormControlLabel
+                  label="Date"
+                  error={errorProps.error}
+                  helperText={errorProps.helperText}
+                >
+                  <input {...inputProps} type="date" />
+                </FormControlLabel>
+              );
+            }}
+          </FormItem>
+          <FormItem
             name="file"
             valuePropName="files"
             rules={{ required: { value: true } }}
           >
-            <input type="file" />
-          </InputFormItem>
+            {({ inputProps, errorProps }) => {
+              return (
+                <FormControlLabel
+                  label="File"
+                  error={errorProps.error}
+                  helperText={errorProps.helperText}
+                >
+                  <input {...inputProps} type="file" />
+                </FormControlLabel>
+              );
+            }}
+          </FormItem>
           <FormItem name="select" rules={{ required: { value: true } }}>
             {({ inputProps, errorProps }) => {
               return (
-                <label
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    marginTop: 4,
-                    marginBottom: 4,
-                  }}
+                <FormControlLabel
+                  label="Select"
+                  error={errorProps.error}
+                  helperText={errorProps.helperText}
                 >
-                  <span style={{ padding: 4 }}>Select</span>
                   <select {...inputProps}>
                     <option value=""></option>
                     <option value="1">Option 1</option>
                     <option value="2">Option 2</option>
                     <option value="3">Option 3</option>
                   </select>
-                  {errorProps.error && (
-                    <div style={{ color: "red", marginTop: 4 }}>
-                      {errorProps.helperText}
-                    </div>
-                  )}
-                </label>
+                </FormControlLabel>
               );
             }}
           </FormItem>
         </div>
-        <div style={{ marginTop: 10 }}>
-          <div style={{ marginRight: 10, display: "inline-block" }}>
-            <button type="submit">Submit</button>
-          </div>
-          <button type="reset">Reset</button>
-        </div>
-        {values && (
-          <div style={{ wordBreak: "break-all" }}>
-            <div>Submitted value</div>
-            <div>{JSON.stringify(values)}</div>
-          </div>
-        )}
+        <FormButtonGroup values={values} />
       </Form>
     </FormConfigProvider>
   );
@@ -140,24 +175,23 @@ const Exmaple2Template: Story<FormProps> = (args) => {
             const label = `Text${seq}`;
 
             return (
-              <InputFormItem label={label} name={name} key={name}>
-                <input />
-              </InputFormItem>
+              <FormItem name={name} key={name}>
+                {({ inputProps, errorProps }) => {
+                  return (
+                    <FormControlLabel
+                      label={label}
+                      error={errorProps.error}
+                      helperText={errorProps.helperText}
+                    >
+                      <input {...inputProps} />
+                    </FormControlLabel>
+                  );
+                }}
+              </FormItem>
             );
           })}
         </div>
-        <div style={{ marginTop: 10 }}>
-          <div style={{ marginRight: 10, display: "inline-block" }}>
-            <button type="submit">Submit</button>
-          </div>
-          <button type="reset">Reset</button>
-        </div>
-        {values && (
-          <div style={{ wordBreak: "break-all" }}>
-            <div>Submitted value</div>
-            <div>{JSON.stringify(values)}</div>
-          </div>
-        )}
+        <FormButtonGroup values={values} />
       </Form>
     </FormConfigProvider>
   );
@@ -166,27 +200,11 @@ const Exmaple2Template: Story<FormProps> = (args) => {
 export const Default = Exmaple1Template.bind({});
 export const ManyInputs = Exmaple2Template.bind({});
 
-const InputFormItem: React.FC<{ label: string } & FormItemProps> = ({
-  label,
-  children,
-  ...props
-}) => {
-  const { errorProps, ref, onBlur, onChange, value } = useFormItem(props);
-  const childrenWithProps = React.Children.map(children, (child, index) => {
-    if (index > 0) return null;
-
-    if (React.isValidElement(child)) {
-      return React.cloneElement(child, {
-        ref,
-        onBlur,
-        onChange,
-        [props.valuePropName || "value"]: value,
-      });
-    }
-
-    return child;
-  });
-
+const FormControlLabel: React.FC<{
+  label: string;
+  error: boolean;
+  helperText?: string;
+}> = ({ label, error, helperText, children }) => {
   return (
     <label
       style={{
@@ -197,13 +215,27 @@ const InputFormItem: React.FC<{ label: string } & FormItemProps> = ({
       }}
     >
       <span style={{ padding: 4 }}>{label}</span>
-      {childrenWithProps}
-      {errorProps.error && (
-        <div style={{ color: "red", marginTop: 4 }}>
-          {errorProps.helperText}
-        </div>
-      )}
+      {children}
+      {error && <div style={{ color: "red", marginTop: 4 }}>{helperText}</div>}
     </label>
   );
 };
-InputFormItem.displayName = "InputFormItem";
+
+const FormButtonGroup: React.FC<{ values: any }> = ({ values }) => {
+  return (
+    <>
+      <div style={{ marginTop: 10 }}>
+        <div style={{ marginRight: 10, display: "inline-block" }}>
+          <button type="submit">Submit</button>
+        </div>
+        <button type="reset">Reset</button>
+      </div>
+      {values && (
+        <div style={{ wordBreak: "break-all" }}>
+          <div>Submitted value</div>
+          <div>{JSON.stringify(values)}</div>
+        </div>
+      )}
+    </>
+  );
+};
