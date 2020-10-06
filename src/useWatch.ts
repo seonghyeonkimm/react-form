@@ -7,7 +7,8 @@ const useWatch = (name: string | ItemPathType) => {
   const form = useForm();
   const [watchValue, setWatchValue] = useState(() => {
     const itemPath = typeof name === "string" ? [name] : name;
-    form.getItemValue(itemPath as ItemPathType);
+
+    return form.getItemValue(itemPath as ItemPathType);
   });
 
   useEffect(() => {
