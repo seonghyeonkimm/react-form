@@ -158,6 +158,7 @@ const DefaultTemplate: Story<FormProps> = (args) => {
 
                   return (
                     <DatePicker
+                      clearable
                       inputRef={ref}
                       placeholder="Select date"
                       value={value || null}

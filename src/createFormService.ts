@@ -1,7 +1,7 @@
 import _get from "lodash.get";
 import _set from "lodash.set";
 import _unset from "lodash.unset";
-import React, { ReactText } from "react";
+import React, { ReactText, SetStateAction } from "react";
 
 export type ValueType =
   | ReactText
@@ -37,17 +37,19 @@ class FormService {
   private registeredItemPaths: ItemPathType[];
   private onSubmit: FormServiceProps["onSubmit"];
   private initialValues: FormServiceProps["initialValues"];
+  private subscriptions: Record<string, any>;
 
   constructor({ onSubmit, initialValues = {} }: FormServiceProps) {
     this.store = {};
     this.onSubmit = onSubmit;
     this.registeredItemPaths = [];
+    this.subscriptions = {};
     this.initialValues = initialValues;
   }
 
   submit = (e?: React.FormEvent) => {
     e?.preventDefault();
-    const { registeredItemPaths, onSubmit, getItemValue, validate } = this;
+    const { registeredItemPaths, onSubmit, getItemValue, validateForm } = this;
 
     this.resetErrors();
     const values = registeredItemPaths.reduce((result, itemPath) => {
@@ -56,7 +58,7 @@ class FormService {
       return result;
     }, {});
 
-    const isFormValid = validate();
+    const isFormValid = validateForm();
     if (!isFormValid) return;
     onSubmit && onSubmit(values);
   };
@@ -86,7 +88,7 @@ class FormService {
     });
   };
 
-  validate = () => {
+  validateForm = () => {
     const { store, registeredItemPaths } = this;
     let isValid = true;
     registeredItemPaths.forEach((itemPath) => {
@@ -133,6 +135,21 @@ class FormService {
     return _get(initialValues, name) || defaultValue;
   };
 
+  subscribe = (
+    name: string | ItemPathType,
+    func: SetStateAction<ValueType>
+  ) => {
+    const { subscriptions } = this;
+
+    const current = _get(subscriptions, name) || [];
+    _set(subscriptions, name, [...current, func]);
+  };
+
+  observe = (name: string | ItemPathType, value: ValueType) => {
+    const subscriptions = _get(this.subscriptions, name) || [];
+    subscriptions.forEach((action: SetStateAction<any>) => action(value));
+  };
+
   createOrGetItemRef = (name: string | ItemPathType) => {
     const { store, registeredItemPaths } = this;
 
@@ -140,7 +157,7 @@ class FormService {
     if (savedRef) return savedRef;
 
     registeredItemPaths.push(typeof name === "string" ? [name] : name);
-    const newRef = React.createRef();
+    const newRef = React.createRef<StoreValueType>();
     _set(store, name, newRef);
 
     return newRef;

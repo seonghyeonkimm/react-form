@@ -7,3 +7,4 @@ export { default as FormItem } from "./FormItem";
 export { default as useForm } from "./useForm";
 export { default as useFormConfig } from "./useFormConfig";
 export { default as useFormItem } from "./useFormItem";
+export { default as useWatch } from "./useWatch";

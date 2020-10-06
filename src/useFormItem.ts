@@ -173,6 +173,12 @@ function useFormItem<TValue extends ValueType>({
     instance: itemRef.current,
   }));
 
+  // run subscriptions
+  useEffect(() => {
+    if (!mountRef.current) return;
+    form.observe(name, value);
+  }, [name, form, value]);
+
   // unregister FormItem in FormService
   useEffect(() => {
     return () => form.removeItemRef(name);

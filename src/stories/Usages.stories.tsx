@@ -21,6 +21,7 @@ import Form from "../Form";
 import FormConfigProvider from "../FormConfigProvider";
 import FormItem, { FormItemProps } from "../FormItem";
 import useFormItem from "../useFormItem";
+import useWatch from "../useWatch";
 
 export default {
   title: "react-form/Usages",
@@ -145,6 +146,40 @@ Hook.args = {
   name: "date",
   defaultValue: null,
   rules: { required: { value: true } },
+};
+
+const WatchTemplate: Story<Parameters<typeof useFormItem>[0]> = (args) => {
+  const [values, setValues] = useState<Record<string, ValueType>>();
+
+  const handleFormFinish = (values: Record<string, ValueType>) => {
+    setValues(values);
+  };
+
+  const WatchedComponent: React.FC = () => {
+    const text = useWatch(args.name);
+
+    return <>Watched value: {text}</>;
+  };
+
+  return (
+    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      <FormConfigProvider validateMode="change">
+        <Form onSubmit={handleFormFinish}>
+          <FormLabel component="div">useWatch hook</FormLabel>
+          <FormItem {...args}>
+            <TextField />
+          </FormItem>
+          <WatchedComponent />
+          <FormButtonGroup values={values} />
+        </Form>
+      </FormConfigProvider>
+    </MuiPickersUtilsProvider>
+  );
+};
+
+export const Watch = WatchTemplate.bind({});
+Watch.args = {
+  name: "text",
 };
 
 const FormButtonGroup: React.FC<{ values: any }> = ({ values }) => {
