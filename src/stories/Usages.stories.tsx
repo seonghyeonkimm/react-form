@@ -96,36 +96,38 @@ RenderProps.args = {
   },
 };
 
-const HookTemplate: Story<Parameters<typeof useFormItem>[0]> = (args) => {
+type HookParameters = Parameters<typeof useFormItem>[0];
+
+const DatePickerFormItem: React.FC<HookParameters> = (args) => {
+  const { value, errorProps, setValue, setErrors, ref } = useFormItem<
+    ParsableDate
+  >(args);
+
+  const handleChange = (date: MaterialUiPickersDate) => {
+    if (!date) {
+      setErrors((prev) => [...prev, "This field is required"]);
+    }
+
+    setValue(date);
+    if (errorProps.error) setErrors([]);
+  };
+
+  return (
+    <DatePicker
+      inputRef={ref}
+      placeholder="Select date"
+      value={value}
+      onChange={handleChange}
+      {...errorProps}
+    />
+  );
+};
+
+const HookTemplate: Story<HookParameters> = (args) => {
   const [values, setValues] = useState<Record<string, ValueType>>();
 
   const handleFormFinish = (values: Record<string, ValueType>) => {
     setValues(values);
-  };
-
-  const DatePickerFormItem: React.FC = () => {
-    const { value, errorProps, setValue, setErrors, ref } = useFormItem<
-      ParsableDate
-    >(args);
-
-    const handleChange = (date: MaterialUiPickersDate) => {
-      if (!date) {
-        setErrors((prev) => [...prev, "This field is required"]);
-      }
-
-      setValue(date);
-      if (errorProps.error) setErrors([]);
-    };
-
-    return (
-      <DatePicker
-        inputRef={ref}
-        placeholder="Select date"
-        value={value}
-        onChange={handleChange}
-        {...errorProps}
-      />
-    );
   };
 
   return (
@@ -133,7 +135,7 @@ const HookTemplate: Story<Parameters<typeof useFormItem>[0]> = (args) => {
       <FormConfigProvider validateMode="change">
         <Form onSubmit={handleFormFinish}>
           <FormLabel component="div">useFormItem hook</FormLabel>
-          <DatePickerFormItem />
+          <DatePickerFormItem {...args} />
           <FormButtonGroup values={values} />
         </Form>
       </FormConfigProvider>
@@ -148,17 +150,17 @@ Hook.args = {
   rules: { required: { value: true } },
 };
 
-const WatchTemplate: Story<Parameters<typeof useFormItem>[0]> = (args) => {
+const WatchedComponent: React.FC<HookParameters> = (args) => {
+  const text = useWatch(args.name);
+
+  return <>Watched value: {text}</>;
+};
+
+const WatchTemplate: Story<HookParameters> = (args) => {
   const [values, setValues] = useState<Record<string, ValueType>>();
 
   const handleFormFinish = (values: Record<string, ValueType>) => {
     setValues(values);
-  };
-
-  const WatchedComponent: React.FC = () => {
-    const text = useWatch(args.name);
-
-    return <>Watched value: {text}</>;
   };
 
   return (
@@ -169,7 +171,7 @@ const WatchTemplate: Story<Parameters<typeof useFormItem>[0]> = (args) => {
           <FormItem {...args}>
             <TextField />
           </FormItem>
-          <WatchedComponent />
+          <WatchedComponent {...args} />
           <FormButtonGroup values={values} />
         </Form>
       </FormConfigProvider>
